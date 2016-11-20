@@ -18,7 +18,6 @@ class Article extends Component {
         if(comments){
            commentList = comments.map(comment => <li key={comment.id} ><Comment comment = {comment} /></li>)
         }
-
         const body = this.state.isOpen ? <p>{article.text}</p> : null
         const commentLink = (this.state.isOpen && (this.state.isOpenComment == false)) ? <a onClick = {this.openComment} href="#" key={article.id}>показать комментрарии</a> : null
         const commentLinkActive = this.state.isOpenComment ?  <a onClick = {this.openComment} href="#" key={article.id}>скрыть коментарии</a> : null
