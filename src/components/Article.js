@@ -1,51 +1,34 @@
-import React, { Component } from 'react'
-import Comment from './Comment'
 
-class Article extends Component {
+import React, { Component, PropTypes } from 'react'
+import CommentList from './CommentList'
 
-    constructor() {
-        super()
-        this.state = {
-            isOpen: false,
-            isOpenComment:false
-        }
-    }
+function Article(props) {
+    const { article, toggleOpen } = props
+    return (
+        <section>
+            <h3 onClick = {toggleOpen}>{article.title}</h3>
+            {getBody(props)}
+        </section>
+    )
+}
 
-    render() {
-        const { article } = this.props
-        const comments = article.comments
-        let commentList;
-        if(comments){
-           commentList = comments.map(comment => <li key={comment.id} ><Comment comment = {comment} /></li>)
-        }
+Article.propTypes = {
+    article: PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        comments: PropTypes.array,
+        text: PropTypes.string
+    }).isRequired
+}
 
-        const body = this.state.isOpen ? <p>{article.text}</p> : null
-        const commentLink = (this.state.isOpen && (this.state.isOpenComment == false)) ? <a onClick = {this.openComment} href="#" key={article.id}>показать комментрарии</a> : null
-        const commentLinkActive = this.state.isOpenComment ?  <a onClick = {this.openComment} href="#" key={article.id}>скрыть коментарии</a> : null
-        const bodyCommentList = this.state.isOpenComment ? <ul>{commentList}</ul> : null
-        return (
-            <section>
-                <h3 onClick = {this.handleClick}>{article.title}</h3>
-                {body}
-                {commentLink}
-                {commentLinkActive}
-                {bodyCommentList}
-            </section>
-        )
-    }
-
-    handleClick = ev => {
-        this.setState({
-            isOpen: !this.state.isOpen,
-
-        })
-    }
-    openComment = e =>{
-      this.setState({
-          isOpenComment: !this.state.isOpenComment
-      });
-  }
-
+function getBody(props) {
+    const { article, isOpen } = props
+    if (!isOpen) return null
+    return (
+        <div>
+            <p>{article.text}</p>
+            <CommentList comments = {article.comments} />
+        </div>
+    )
 }
 
 export default Article
